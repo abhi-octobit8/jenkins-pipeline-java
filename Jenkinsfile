@@ -33,12 +33,11 @@ pipeline {
 
     post {
         success {
-            // You can add post-build actions here, e.g., deploying to a server.
-            // You can also use the "Mailer" plugin to send email notifications on success.
+            echo 'job successful'
         }
 
         failure {
-            // You can define actions to be taken on build failure here.
+            echo 'job failed'
         }
     }
 }
