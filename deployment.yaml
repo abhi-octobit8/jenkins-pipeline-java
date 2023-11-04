@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+spec:
+  replicas: 3  # Adjust as needed
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+        - name: springboot-app
+          image: your-docker-registry/your-springboot-app:tag  # Replace with your Docker image details
+          ports:
+            - containerPort: 8080  # Port your Spring Boot app listens on

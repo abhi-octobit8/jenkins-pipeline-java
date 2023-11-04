@@ -62,6 +62,67 @@ pipeline {
             }
         }
 
+        stage('Docker Build') {
+            steps {
+                script {
+                    // Define the Docker image name and tag
+                    def dockerImage = 'your-docker-image-name:tag'
+                    
+                    // Build the Docker image using the specified Dockerfile
+                    sh "docker build -t $dockerImage -f Dockerfile ."
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                script {
+                    // Specify your Docker image name and tag
+                    def dockerImage = 'your-docker-image-name:tag'
+                    
+                    // Log in to the Docker registry (if needed)
+                    withCredentials([usernamePassword(credentialsId: 'your-docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    }
+                    
+                    // Push the Docker image to a container registry
+                    sh "docker push $dockerImage"
+                }
+            }
+        }
+
+        stage('Initialize Terraform') {
+            steps {
+                // Initialize Terraform in your working directory
+                bat 'terraform init'
+            }
+        }
+
+        stage('Plan Terraform Changes') {
+            steps {
+                // Create an execution plan to review changes
+                bat 'terraform plan -out=tfplan'
+            }
+        }
+
+        stage('Apply Terraform Changes') {
+            steps {
+                // Apply the changes to create the AKS cluster
+                bat 'terraform apply -auto-approve tfplan'
+            }
+        }
+
+        stage('Deploy to AKS') {
+            steps {
+                script {
+                    def kubeconfigPath = sh(script: 'echo $KUBECONFIG', returnStdout: true).trim()
+                    
+                    // Set the image for the deployment
+                    sh "kubectl --kubeconfig=$kubeconfigPath set image deployment/your-deployment-name your-container-name=$IMAGE_NAME"
+                }
+            }
+        }
+
     }
 
     post {
