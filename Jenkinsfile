@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    environment {
-        // Define the Maven installation name if needed
-        MAVEN_HOME = tool name: 'maven', type: 'maven'
+    tools {
+        maven 'Maven 3.9.3'
+        jdk 'Java 17.0.4.1'
     }
 
     stages {
