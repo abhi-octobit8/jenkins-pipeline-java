@@ -41,26 +41,25 @@ pipeline {
             }
         }
 
-        stage ('Artifactory configuration') {
+       stage('Publish to Artifactory') {
             steps {
-                rtServer (
-                    id: "Artifactory-1",
-                    url: SERVER_URL,
-                    credentialsId: CREDENTIALS
-                )
+                script {
+                    def server = Artifactory.server 'Artifactory-1'
 
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
-                    serverId: "Artifactory-1",
-                    releaseRepo: ARTIFACTORY_LOCAL_RELEASE_REPO,
-                    snapshotRepo: ARTIFACTORY_LOCAL_SNAPSHOT_REPO
-                )
+                    // Define the source and target paths for publishing
+                    def sourcePath = "target/*.jar"  // Replace with the actual path to your artifacts
+                    def targetRepository = 'java-app'  // Replace with the target repository name
 
-                rtMavenResolver (
-                    id: "MAVEN_RESOLVER",
-                    serverId: "Artifactory-1",
-                    releaseRepo: ARTIFACTORY_VIRTUAL_RELEASE_REPO,
-                    snapshotRepo: ARTIFACTORY_VIRTUAL_SNAPSHOT_REPO
+                    // Publish artifacts to Artifactory
+                    server.upload spec: sourcePath, target: targetRepository
+                }
+            }
+        }
+
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "Artifactory-1"
                 )
             }
         }
