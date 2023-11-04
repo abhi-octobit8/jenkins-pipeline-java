@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        // Define the Maven installation name if needed
+        MAVEN_HOME = tool name: 'Maven', type: 'maven'
+    }
+
     stages {
         stage('Checkout') {
             steps {
