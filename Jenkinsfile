@@ -12,14 +12,14 @@ pipeline {
         stage('Build') {
             steps {
                 // Use the Maven tool configured in your Jenkins server
-                sh 'mvn clean package'
+                bat 'mvn clean package'
             }
         }
 
         stage('Test') {
             steps {
                 // Run the unit tests
-                sh 'mvn test'
+                bat 'mvn test'
             }
         }
 
