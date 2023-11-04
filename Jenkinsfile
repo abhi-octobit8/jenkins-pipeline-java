@@ -34,12 +34,12 @@ pipeline {
             }
         }
 
-        stage('Package') {
-            steps {
-                // Archive the JAR file for future use (optional)
-                archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
-            }
-        }
+        // stage('Package') {
+        //     steps {
+        //         // Archive the JAR file for future use (optional)
+        //         archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+        //     }
+        // }
 
         stage('Publish to Artifactory') {
             steps {
