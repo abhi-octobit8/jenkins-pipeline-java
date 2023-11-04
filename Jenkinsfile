@@ -34,12 +34,12 @@ pipeline {
             }
         }
 
-        // stage('Package') {
-        //     steps {
-        //         // Archive the JAR file for future use (optional)
-        //         archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
-        //     }
-        // }
+        stage('Package') {
+            steps {
+                // Archive the JAR file for future use (optional)
+                archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            }
+        }
 
         stage('Publish to Artifactory') {
             steps {
@@ -48,7 +48,7 @@ pipeline {
                     def buildInfo = Artifactory.newBuildInfo()
 
                     // Define the artifacts to be published
-                    def artifactPath = "target/*.jar"  // Replace with the actual path to your artifacts
+                    def artifactPath = "**/target/*.jar"  // Replace with the actual path to your artifacts
 
                     // Publish artifacts to Artifactory
                     server.upload spec: "${artifactPath}", buildInfo: buildInfo
