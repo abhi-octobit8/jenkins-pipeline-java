@@ -41,20 +41,30 @@ pipeline {
             }
         }
 
-        stage('Publish to Artifactory') {
+        stage ('Artifactory configuration') {
             steps {
-                script {
-                    def server = Artifactory.server 'Artifactory-1'
-                    def buildInfo = Artifactory.newBuildInfo()
+                rtServer (
+                    id: "Artifactory-1",
+                    url: SERVER_URL,
+                    credentialsId: CREDENTIALS
+                )
 
-                    // Define the artifacts to be published
-                    def artifactPath = "target/*.jar"  // Replace with the actual path to your artifacts
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "Artifactory-1",
+                    releaseRepo: ARTIFACTORY_LOCAL_RELEASE_REPO,
+                    snapshotRepo: ARTIFACTORY_LOCAL_SNAPSHOT_REPO
+                )
 
-                    // Publish artifacts to Artifactory
-                    server.upload spec: "build/libs/*.jar", buildInfo: buildInfo
-                }
+                rtMavenResolver (
+                    id: "MAVEN_RESOLVER",
+                    serverId: "Artifactory-1",
+                    releaseRepo: ARTIFACTORY_VIRTUAL_RELEASE_REPO,
+                    snapshotRepo: ARTIFACTORY_VIRTUAL_SNAPSHOT_REPO
+                )
             }
         }
+
     }
 
     post {
