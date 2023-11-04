@@ -27,7 +27,7 @@ pipeline {
             steps {
                 // Run SonarQube analysis
                 withSonarQubeEnv('default-sonar') {
-                    sh """
+                    bat """
                         sonar-scanner -Dsonar.projectKey=java-app -Dsonar.sources=src -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_d2cddd0d5ead387830cae6232e6fba7dd1af5000
                     """
                 }
