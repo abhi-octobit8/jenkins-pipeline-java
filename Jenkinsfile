@@ -45,22 +45,20 @@ pipeline {
             steps {
                 script {
                     def server = Artifactory.server 'Artifactory-1'
+                    def uploadSpec = '''{
+                        "files": [
+                            {
+                                "pattern": "target/*.jar",
+                                "target": "java-app"
+                            }
+                        ]
+                    }'''
 
-                    // Define the source and target paths for publishing
-                    def sourcePath = "target/*.jar"  // Replace with the actual path to your artifacts
-                    def targetRepository = 'java-app'  // Replace with the target repository name
-
+                    def buildInfo = Artifactory.newBuildInfo()
+                    
                     // Publish artifacts to Artifactory
-                    server.upload spec: sourcePath, target: targetRepository
+                    server.upload(uploadSpec, buildInfo)
                 }
-            }
-        }
-
-        stage ('Publish build info') {
-            steps {
-                rtPublishBuildInfo (
-                    serverId: "Artifactory-1"
-                )
             }
         }
 
