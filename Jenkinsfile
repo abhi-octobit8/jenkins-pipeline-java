@@ -48,10 +48,10 @@ pipeline {
                     def buildInfo = Artifactory.newBuildInfo()
 
                     // Define the artifacts to be published
-                    def artifactPath = "//target//*.jar"  // Replace with the actual path to your artifacts
+                    def artifactPath = "target/*.jar"  // Replace with the actual path to your artifacts
 
                     // Publish artifacts to Artifactory
-                    server.upload spec: "${artifactPath}", buildInfo: buildInfo
+                    server.upload spec: "build/libs/*.jar", buildInfo: buildInfo
                 }
             }
         }
