@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-app-service
+spec:
+  selector:
+    app: springboot-app
+  ports:
+    - protocol: TCP
+      port: 80  # The port through which you will access the app
+      targetPort: 8080  # Port your Spring Boot app listens on
+  type: LoadBalancer  # Use "LoadBalancer" to expose the service externally
